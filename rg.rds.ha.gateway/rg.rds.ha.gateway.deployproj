@@ -30,6 +30,7 @@
       <Visible>False</Visible>
     </None>
     <Content Include="Deploy-AzureResourceGroup.ps1" />
+    <Content Include="README - Copy.md" />
     <Content Include="Scripts\WebAndGwFarmAdd_PostConfig1.1.ps1" />
     <Content Include="README.md" />
   </ItemGroup>
