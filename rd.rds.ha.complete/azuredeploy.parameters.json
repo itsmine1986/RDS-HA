@@ -49,6 +49,18 @@
     },
     "gatewayIpRef": {
       "value": "PiPEu1Rdgwh"
+    },
+    "gw-nic-name": {
+      "value": "NcVmWTRdgwh01"
+    },
+    "2nd-gw-nic-name": {
+      "value": "NcVmWTRdgwh02"
+    },
+    "cb-nic-name": {
+      "value": "NcVmWTRdcbh01"
+    },
+    "rds-nic-name": {
+      "value": "NcVmWTRdsh"
     }
   }
 }

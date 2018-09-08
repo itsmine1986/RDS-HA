@@ -377,7 +377,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',parameters('2nd-gw-nic-name')]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',parameters('2nd-gw-nic-name'))]"
             }
           ]
         }
