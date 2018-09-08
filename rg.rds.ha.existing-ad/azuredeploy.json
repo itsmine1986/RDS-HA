@@ -449,10 +449,10 @@
             "type": "Microsoft.Compute/virtualMachines",
             "name": "VmWTRdgwh1",
             "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Compute/availabilitySets', 'AsTRdgwh01')]",
-                "Microsoft.Network/networkInterfaces/NcVmWTRdgwh01"
-            ],
+          "dependsOn": [
+            "[resourceId('Microsoft.Compute/availabilitySets', 'AsTRdgwh01')]",
+            "[concat('Microsoft.Network/networkInterfaces/',parameters('gw-nic-name'))]"
+          ],
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "Standard_A2"
