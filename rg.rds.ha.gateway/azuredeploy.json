@@ -319,7 +319,7 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
-                "id": "[variables('subnet-id')]"
+                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('existingVnet'), parameters('existingSubnet')))]"
               },
               "loadBalancerBackendAddressPools": [
                 {

@@ -159,7 +159,7 @@
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",
     "dnsServerPrivateIp": "10.40.0.4",
-    "subnet-id": "[concat(resourceId(parameters('adVnetRG'),'Microsoft.Network/virtualNetworks',parameters('adVnetName')),'/subnets/',parameters('adSubnetName'))]",
+    //"subnet-id": "[concat(resourceId(parameters('adVnetRG'),'Microsoft.Network/virtualNetworks',parameters('adVnetName')),'/subnets/',parameters('adSubnetName'))]",
    //"publicIpRef": "[parameters('publicIpRef')]",
    //"brokerIpRef": "[parameters('brokerIpRef')]",
    //"gatewayIpRef": "[parameters('gatewayIpRef')]",
@@ -358,7 +358,7 @@
                   "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('gatewayIpRef'))]"
                 },
                 "subnet": {
-                  "id": "[variables('subnet-id')]"
+                  "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('adVnetName'), parameters('adSubnetName')))]"
                 },
                 "loadBalancerBackendAddressPools": [
                   {
@@ -401,7 +401,7 @@
                   "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('brokerIpRef'))]"
                 },
                 "subnet": {
-                  "id": "[variables('subnet-id')]"
+                  "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('adVnetName'), parameters('adSubnetName')))]"
                 }
               }
             }
@@ -432,7 +432,7 @@
               "properties": {
                 "privateIPAllocationMethod": "Dynamic",
                 "subnet": {
-                  "id": "[variables('subnet-id')]"
+                  "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('adVnetName'), parameters('adSubnetName')))]"
                 }
               }
             }
