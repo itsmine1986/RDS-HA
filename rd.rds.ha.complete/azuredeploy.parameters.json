@@ -33,13 +33,13 @@
       "value": "LBBAP"
     },
     "numberOfWebGwInstances": {
-      "value": 2
+      "value": 1
     },
     "domainNetbios": {
       "value": "adm"
     },
     "storageAccountName": {
-      "value": "SaTRdsh01igacr"
+      "value": "satrdsh01igacr"
     },
     "publicIpRef": {
       "value": "PiPEu1Rdsh"

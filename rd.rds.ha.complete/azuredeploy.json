@@ -157,7 +157,7 @@
     "rds-ha-broker-uri": "https://raw.githubusercontent.com/itsmine1986/RDS-HA/master/rg.rds.ha.broker/azuredeploy.json",
     "rds-ha-gateway-availablilitySet-name": "AsTRdgwh01",
     "rds-ha-gateway-fqdn-internal-name": "concat('VmWPRdgwh.',parameters(adDomainName))",
-    "rds-ha-gateway-fqdn-external-name": "[concat('gwd','rdshademo1','.',parameters('location'),'.cloudapp.azure.com')]",
+    "rds-ha-gateway-fqdn-external-name": "[concat('gw','rdshademo1','.',parameters('location'),'.cloudapp.azure.com')]",
     "rds-ha-brokerServer-fqdn-internal-name": "concat('VmWTRdcbh01.',parameters(adDomainName))"
   },
   "resources": [
