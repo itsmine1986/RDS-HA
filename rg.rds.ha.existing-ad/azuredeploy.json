@@ -105,7 +105,7 @@
     },
     "backendAddressPools": {
       "type": "string",
-      "defaultValue": "[parameters('backendAddressPools')]",
+      "defaultValue": "LBBAP",
       "metadata": {
         "description": "The backendAddressPools name must match from the RDS deployment. And default value taken by template is LBBAP."
       }
