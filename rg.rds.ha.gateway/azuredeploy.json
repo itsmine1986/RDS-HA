@@ -13,7 +13,7 @@
       "metadata": {
         "description": "The Loadbalancer name must match from the RDS deployment. And default value taken by template is loadbalancer."
       },
-      "defaultValue": "loadBalancer"
+      "defaultValue": "LbITRds01"
     },
     "backendAddressPools": {
       "type": "string",
@@ -24,7 +24,7 @@
     },
     "gw-AvailabilitySet": {
       "type": "string",
-      "defaultValue": "gw-availabilityset",
+      "defaultValue": "AsTRdgwh01",
       "metadata": {
         "description": "The gw-availabilityset name must match from the RDS deployment. And default value taken by template is gw-availabilityset."
       }
@@ -137,7 +137,7 @@
     "imageOffer": "WindowsServer",
     "dnsServerPrivateIp": "10.40.0.4",
     "subnet-id": "[concat(resourceId(parameters('adVnetRG'),'Microsoft.Network/virtualNetworks',parameters('existingVnet')),'/subnets/',parameters('existingSubnet'))]",
-    "publicIpRef": "publicIp",
+    "publicIpRef": "PiPEu1Rdsh",
     "assetLocation": "https://raw.githubusercontent.com/Azure/AzureStack-QuickStart-Templates/master/rds-deployment",
     "apiVersion": "2015-06-15",
     "PublicIPLocation": "[concat(parameters('dnsLabelPrefix'),'.','[resourceGroup().location]','.cloudapp.azure.com')]"
@@ -273,7 +273,7 @@
       }
     },
     {
-      "name": "[concat('gw-',copyindex(),'-nic')]",
+      "name": "NcVmWTRdgwh02",
       "type": "Microsoft.Network/networkInterfaces",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
@@ -282,7 +282,7 @@
         "count": "[parameters('numberOfWebGwInstances')]"
       },
       "dependsOn": [
-        "Microsoft.Network/loadBalancers/loadBalancer"
+        "Microsoft.Network/loadBalancers/LbITRds01"
       ],
       "properties": {
         "ipConfigurations": [
@@ -295,7 +295,7 @@
               },
               "loadBalancerBackendAddressPools": [
                 {
-                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer'),'/backendAddressPools/',parameters('backendAddressPools'))]"
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers','LbITRds01'),'/backendAddressPools/',parameters('backendAddressPools'))]"
                 }
               ],
               "loadBalancerInboundNatRules": []
@@ -305,7 +305,7 @@
       }
     },
     {
-      "name": "[concat('gw-vm-',copyindex())]",
+      "name": "[concat('VmWPRdgwh',copyindex())]",
       "type": "Microsoft.Compute/virtualMachines",
       "location": "[resourceGroup().location]",
       "apiVersion": "2017-03-30",
@@ -314,19 +314,19 @@
         "count": "[parameters('numberOfWebGwInstances')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]",
-        "[resourceId('Microsoft.Compute/availabilitySets', 'gw-availabilityset')]",
-        "[concat('Microsoft.Network/networkInterfaces/gw-',copyindex(),'-nic')]"
+        "[concat('Microsoft.Storage/storageAccounts/',parameters('storageAccountName'))]",
+        "[resourceId('Microsoft.Compute/availabilitySets','AsTRdgwh01')]",
+        "[concat('Microsoft.Network/networkInterfaces','NcVmWTRdgwh02')]"
       ],
       "properties": {
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
         },
         "availabilitySet": {
-          "id": "[resourceId('Microsoft.Compute/availabilitySets', 'gw-availabilityset')]"
+          "id": "[resourceId('Microsoft.Compute/availabilitySets','AsTRdgwh01')]"
         },
         "osProfile": {
-          "computerName": "[concat('gateway',copyindex())]",
+          "computerName": "[concat('VmWPRdgwh',copyindex())]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
@@ -338,7 +338,7 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[concat('gw-vm-',copyindex(),'_osdisk')]",
+            "name": "MdOVmWTRdgwh02",
             "managedDisk": {
               "storageAccountType": "Standard_LRS"
             },
@@ -349,19 +349,19 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('gw-',copyindex(),'-nic'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces','NcVmWTRdgwh02')]"
             }
           ]
         }
       },
       "resources": [
         {
-          "name": "[concat('gw-vm-',copyindex(),'/Gateway')]",
+          "name": "[concat('VmWPRdgwh',copyindex(),'/Gateway')]",
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "location": "[resourceGroup().location]",
           "apiVersion": "2015-06-15",
           "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', Concat('gw-vm-',copyindex()))]"
+            "[resourceId('Microsoft.Compute/virtualMachines', Concat('VmWPRdgwh',copyindex()))]"
           ],
           "properties": {
             "publisher": "Microsoft.Powershell",
@@ -387,13 +387,13 @@
           }
         },
         {
-          "name": "[concat('gw-vm-',copyindex(),'/WebAndGwFarmAdd_PostConfig1.1')]",
+          "name": "[concat('VmWPRdgwh',copyindex(),'/WebAndGwFarmAdd_PostConfig1.1')]",
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "location": "[resourceGroup().location]",
           "apiVersion": "2015-06-15",
           "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', Concat('gw-vm-',copyindex()))]",
-            "[concat('Microsoft.Compute/virtualMachines/gw-vm-',copyindex(),'/extensions/','Gateway')]"
+            "[resourceId('Microsoft.Compute/virtualMachines', Concat('VmWPRdgwh',copyindex()))]",
+            "[concat('Microsoft.Compute/virtualMachines/VmWPRdgwh',copyindex(),'/extensions/','Gateway')]"
           ],
           "properties": {
             "publisher": "Microsoft.Compute",
