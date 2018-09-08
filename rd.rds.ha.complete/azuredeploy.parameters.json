@@ -51,16 +51,16 @@
       "value": "PiPEu1Rdgwh"
     },
     "gw-nic-name": {
-      "value": "NcVmWTRdgwh01"
+      "value": "ncvmwtrdgwh01"
     },
     "2nd-gw-nic-name": {
-      "value": "NcVmWTRdgwh02"
+      "value": "ncvmwtrdgwh02"
     },
     "cb-nic-name": {
-      "value": "NcVmWTRdcbh01"
+      "value": "ncvmwtrdcbh01"
     },
     "rds-nic-name": {
-      "value": "NcVmWTRdsh"
+      "value": "ncvmwtrddsh"
     }
   }
 }
