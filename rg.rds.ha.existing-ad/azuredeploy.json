@@ -327,40 +327,40 @@
             "type": "Microsoft.Network/networkInterfaces",
             "name": "NcVmWTRdgwh01",
             "location": "[parameters('location')]",
-            "dependsOn": [
-                "Microsoft.Network/loadBalancers/LbITRds01"
-            ],
-            "properties": {
-                "ipConfigurations": [
+          "properties": {
+            "ipConfigurations": [
+              {
+                "name": "ipconfig",
+                "properties": {
+                  "privateIPAllocationMethod": "Dynamic",
+                  "publicIPAddress": {
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('gatewayIpRef'))]"
+                  },
+                  "subnet": {
+                    "id": "[variables('subnet-id')]"
+                  },
+                  "loadBalancerBackendAddressPools": [
                     {
-                        "name": "ipconfig",
-                        "properties": {
-                            "privateIPAllocationMethod": "Dynamic",
-                          "publicIPAddress": {
-                            "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('gatewayIpRef'))]"
-                          },
-                            "subnet": {
-                                "id": "[variables('subnet-id')]"
-                            },
-                            "loadBalancerBackendAddressPools": [
-                                {
-                                    "id": "[concat(resourceId('Microsoft.Network/loadBalancers','LbITRds01'),'/backendAddressPools/LBBAP')]"
-                                }
-                            ],
-                            "loadBalancerInboundNatRules": [
-                                {
-                                    "id": "[concat(resourceId('Microsoft.Network/loadBalancers','LbITRds01'),'/inboundNatRules/rdp')]"
-                                }
-                            ]
-                        }
+                      "id": "[concat(resourceId('Microsoft.Network/loadBalancers','LbITRds01'),'/backendAddressPools/LBBAP')]"
                     }
-                ],
-                "dnsSettings": {
-                    "dnsServers": [
-                        "[variables('dnsServerPrivateIp')]"
-                    ]
+                  ],
+                  "loadBalancerInboundNatRules": [
+                    {
+                      "id": "[concat(resourceId('Microsoft.Network/loadBalancers','LbITRds01'),'/inboundNatRules/rdp')]"
+                    }
+                  ]
                 }
-            }
+              }
+            ],
+            "dnsSettings": {
+              "dnsServers": [
+                "[variables('dnsServerPrivateIp')]"
+              ]
+            },
+            "dependsOn": [
+              "Microsoft.Network/loadBalancers/LbITRds01"
+            ]
+          }
         },
         {
             "apiVersion": "2015-06-15",
