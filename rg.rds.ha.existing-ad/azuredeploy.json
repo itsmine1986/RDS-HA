@@ -534,7 +534,7 @@
             },
           "dependsOn": [
             "[resourceId('Microsoft.Compute/availabilitySets', 'AsTRdsh01')]",
-            "[concat('Microsoft.Network/networkInterfaces', 'NcVmWTRdsh', copyindex())]"
+            "[concat('Microsoft.Network/networkInterfaces/', 'ncvmwtrdsh', copyindex())]"
           ],
             "properties": {
                 "hardwareProfile": {
@@ -613,7 +613,7 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Compute/availabilitySets', 'AsTRdcbh01')]",
-                "Microsoft.Network/networkInterfaces/NcVmWTRdcbh01",
+                "Microsoft.Network/networkInterfaces/ncvmwtrdcbh01",
                 "rdsh-vm-loop"
             ],
             "properties": {
