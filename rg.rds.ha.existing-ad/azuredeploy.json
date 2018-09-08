@@ -344,10 +344,10 @@
         }
       },
       {
-        "apiVersion": "2015-06-15",
         "type": "Microsoft.Network/networkInterfaces",
         "name": "[parameters('gw-nic-name')]",
         "location": "[parameters('location')]",
+        "apiVersion": "2015-06-15",
         "properties": {
           "ipConfigurations": [
             {
@@ -384,10 +384,10 @@
         }
       },
       {
-        "apiVersion": "2015-06-15",
         "type": "Microsoft.Network/networkInterfaces",
         "name": "[parameters('cb-nic-name')]",
         "location": "[parameters('location')]",
+        "apiVersion": "2015-06-15",
         "dependsOn": [
           "Microsoft.Network/loadBalancers/LbITRds01"
         ],
@@ -414,10 +414,10 @@
         }
       },
       {
-        "apiVersion": "2015-06-15",
         "type": "Microsoft.Network/networkInterfaces",
         "name": "[concat(parameters('rds-nic-name'), copyindex())]",
         "location": "[parameters('location')]",
+        "apiVersion": "2015-06-15",
         "copy": {
           "name": "rdsh-nic-loop",
           "count": "[parameters('numberOfRdshInstances')]"
