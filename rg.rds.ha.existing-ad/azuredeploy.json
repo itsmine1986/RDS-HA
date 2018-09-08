@@ -323,7 +323,7 @@
         }
       },
       {
-        "apiVersion": "2018-02-01",
+        "apiVersion": "2017-03-30",
         "type": "Microsoft.Network/networkInterfaces",
         "name": "NcVmWTRdgwh01",
         "location": "[parameters('location')]",
@@ -363,7 +363,7 @@
         }
       },
       {
-        "apiVersion": "2018-02-01",
+        "apiVersion": "2017-03-30",
         "type": "Microsoft.Network/networkInterfaces",
         "name": "NcVmWTRdcbh01",
         "location": "[parameters('location')]",
@@ -393,7 +393,7 @@
         }
       },
       {
-        "apiVersion": "2018-02-01",
+        "apiVersion": "2017-03-30",
         "type": "Microsoft.Network/networkInterfaces",
         "name": "[concat('NcVmWTRdsh', copyindex())]",
         "location": "[parameters('location')]",
