@@ -13,7 +13,7 @@
       "metadata": {
         "description": "The name of the AD domain. For example contoso.com"
       },
-      "defaultValue": "contoso.com"
+      "defaultValue": "adm.scalesquad.io"
     },
     "adVnetName": {
       "type": "string",
@@ -41,7 +41,7 @@
       "metadata": {
         "description": "The name of the administrator of the new VM and the domain. Exclusion list: 'administrator'. For example johnadmin"
       },
-      "defaultValue": "vmadmin"
+      "defaultValue": "nitadmin"
     },
     "adminPassword": {
       "type": "securestring",
@@ -63,7 +63,7 @@
     },
     "numberOfRdshInstances": {
       "type": "int",
-      "defaultValue": 1,
+      "defaultValue": 2,
       "metadata": {
         "description": "Number of RemoteDesktopSessionHosts"
       }
@@ -105,7 +105,28 @@
     },
     "backendAddressPools": {
       "type": "string",
-      "defaultValue": " ",
+      "defaultValue": "[parameters('backendAddressPools')]",
+      "metadata": {
+        "description": "The backendAddressPools name must match from the RDS deployment. And default value taken by template is LBBAP."
+      }
+    },
+    "publicIpRef": {
+      "type": "string",
+      "defaultValue": "[parameters('publicIpRef')]",
+      "metadata": {
+        "description": "The backendAddressPools name must match from the RDS deployment. And default value taken by template is LBBAP."
+      }
+    },
+    "brokerIpRef": {
+      "type": "string",
+      "defaultValue": "[parameters('brokerIpRef')]",
+      "metadata": {
+        "description": "The backendAddressPools name must match from the RDS deployment. And default value taken by template is LBBAP."
+      }
+    },
+    "gatewayIpRef": {
+      "type": "string",
+      "defaultValue": "[parameters('gatewayIpRef')]",
       "metadata": {
         "description": "The backendAddressPools name must match from the RDS deployment. And default value taken by template is LBBAP."
       }
@@ -118,48 +139,48 @@
     "imageOffer": "WindowsServer",
     "dnsServerPrivateIp": "10.40.0.4",
     "subnet-id": "[concat(resourceId(parameters('adVnetRG'),'Microsoft.Network/virtualNetworks',parameters('adVnetName')),'/subnets/',parameters('adSubnetName'))]",
-    "publicIpRef": "PiPEu1Rdsh",
-    "brokerIpRef": "PiPEu1Rdcbh",
-    "gatewayIpRef": "PiPEu1Rdgwh",
+   //"publicIpRef": "[parameters('publicIpRef')]",
+   //"brokerIpRef": "[parameters('brokerIpRef')]",
+   //"gatewayIpRef": "[parameters('gatewayIpRef')]",
     "assetLocation": "https://raw.githubusercontent.com/Azure/azure-QuickStart-Templates/master/rds-deployment/"
   },
     "resources": [
-        {
-            "apiVersion": "2015-06-15",
-            "type": "Microsoft.Network/publicIPAddresses",
-            "name": "[variables('publicIpRef')]",
-            "location": "[parameters('location')]",
-            "properties": {
-                "publicIPAllocationMethod": "Dynamic",
-                "dnsSettings": {
-                    "domainNameLabel": "[parameters('dnsLabelPrefix')]"
-                }
-            }
-        },
-        {
-            "apiVersion": "2015-06-15",
-            "type": "Microsoft.Network/publicIPAddresses",
-            "name": "[variables('gatewayIpRef')]",
-            "location": "[parameters('location')]",
-            "properties": {
-                "publicIPAllocationMethod": "Dynamic",
-                "dnsSettings": {
-                    "domainNameLabel": "[variables('gwdnsLabelPrefix')]"
-                }
-            }
-        },
-        {
-            "apiVersion": "2015-06-15",
-            "type": "Microsoft.Network/publicIPAddresses",
-            "name": "[variables('brokerIpRef')]",
-            "location": "[parameters('location')]",
-            "properties": {
-                "publicIPAllocationMethod": "Dynamic",
-                "dnsSettings": {
-                    "domainNameLabel": "[variables('cbdnsLabelPrefix')]"
-                }
-            }
-        },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "[parameters('publicIpRef')]",
+        "location": "[parameters('location')]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[parameters('dnsLabelPrefix')]"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "[parameters('gatewayIpRef')]",
+        "location": "[parameters('location')]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[variables('gwdnsLabelPrefix')]"
+          }
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "[parameters('brokerIpRef')]",
+        "location": "[parameters('location')]",
+        "properties": {
+          "publicIPAllocationMethod": "Dynamic",
+          "dnsSettings": {
+            "domainNameLabel": "[variables('cbdnsLabelPrefix')]"
+          }
+        }
+      },
         {
             "apiVersion": "2017-03-30",
             "type": "Microsoft.Compute/availabilitySets",
@@ -199,108 +220,108 @@
                 "name": "Aligned"
             }
         },
-        {
-            "apiVersion": "2015-06-15",
-            "type": "Microsoft.Network/loadBalancers",
-            "name": "LbITRds01",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[concat('Microsoft.Network/publicIPAddresses/',variables('publicIpRef'))]"
-            ],
-            "properties": {
-                "frontendIPConfigurations": [
-                    {
-                        "name": "LBFE",
-                        "properties": {
-                            "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIpRef'))]"
-                            }
-                        }
-                    }
-                ],
-                "backendAddressPools": [
-                    {
-                        "name": "LBBAP"
-                    }
-                ],
-                "loadBalancingRules": [
-                    {
-                        "name": "LBRule01",
-                        "properties": {
-                            "frontendIPConfiguration": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','LbITRds01'),'/frontendIPConfigurations/LBFE')]"
-                            },
-                            "backendAddressPool": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','LbITRds01'),'/backendAddressPools/LBBAP')]"
-                            },
-                            "protocol": "Tcp",
-                            "frontendPort": 443,
-                            "backendPort": 443,
-                            "enableFloatingIP": false,
-                            "idleTimeoutInMinutes": 5,
-                            "loadDistribution": "SourceIPProtocol",
-                            "probe": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','LbITRds01'),'/probes/tcpProbe')]"
-                            }
-                        }
-                    },
-                    {
-                        "name": "LBRule02",
-                        "properties": {
-                            "frontendIPConfiguration": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','LbITRds01'),'/frontendIPConfigurations/LBFE')]"
-                            },
-                            "backendAddressPool": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','LbITRds01'),'/backendAddressPools/LBBAP')]"
-                            },
-                            "protocol": "Udp",
-                            "frontendPort": 3391,
-                            "backendPort": 3391,
-                            "enableFloatingIP": false,
-                            "idleTimeoutInMinutes": 5,
-                            "loadDistribution": "SourceIPProtocol",
-                            "probe": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','LbITRds01'),'/probes/tcpProbe')]"
-                            }
-                        }
-                    }
-                ],
-                "probes": [
-                    {
-                        "name": "tcpProbe",
-                        "properties": {
-                            "protocol": "Tcp",
-                            "port": 443,
-                            "intervalInSeconds": 5,
-                            "numberOfProbes": 2
-                        }
-                    },
-                    {
-                        "name": "tcpProbe01",
-                        "properties": {
-                            "protocol": "Tcp",
-                            "port": 3391,
-                            "intervalInSeconds": 5,
-                            "numberOfProbes": 2
-                        }
-                    }
-                ],
-                "inboundNatRules": [
-                    {
-                        "name": "rdp",
-                        "properties": {
-                            "frontendIPConfiguration": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','LbITRds01'),'/frontendIPConfigurations/LBFE')]"
-                            },
-                            "protocol": "tcp",
-                            "frontendPort": 3389,
-                            "backendPort": 3389,
-                            "enableFloatingIP": false
-                        }
-                    }
-                ]
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/loadBalancers",
+        "name": "[parameters('loadBalancer')]",
+        "location": "[parameters('location')]",
+        "dependsOn": [
+          "[concat('Microsoft.Network/publicIPAddresses/',parameters('publicIpRef'))]"
+        ],
+        "properties": {
+          "frontendIPConfigurations": [
+            {
+              "name": "LBFE",
+              "properties": {
+                "publicIPAddress": {
+                  "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIpRef'))]"
+                }
+              }
             }
-        },
+          ],
+          "backendAddressPools": [
+            {
+              "name": "LBBAP"
+            }
+          ],
+          "loadBalancingRules": [
+            {
+              "name": "LBRule01",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers',parameters('loadBalancer')),'/frontendIPConfigurations/LBFE')]"
+                },
+                "backendAddressPool": {
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers',parameters('loadBalancer')),'/backendAddressPools/LBBAP')]"
+                },
+                "protocol": "Tcp",
+                "frontendPort": 443,
+                "backendPort": 443,
+                "enableFloatingIP": false,
+                "idleTimeoutInMinutes": 5,
+                "loadDistribution": "SourceIPProtocol",
+                "probe": {
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers',parameters('loadBalancer')),'/probes/tcpProbe')]"
+                }
+              }
+            },
+            {
+              "name": "LBRule02",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers',parameters('loadBalancer')),'/frontendIPConfigurations/LBFE')]"
+                },
+                "backendAddressPool": {
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers',parameters('loadBalancer')),'/backendAddressPools/LBBAP')]"
+                },
+                "protocol": "Udp",
+                "frontendPort": 3391,
+                "backendPort": 3391,
+                "enableFloatingIP": false,
+                "idleTimeoutInMinutes": 5,
+                "loadDistribution": "SourceIPProtocol",
+                "probe": {
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers',parameters('loadBalancer')),'/probes/tcpProbe')]"
+                }
+              }
+            }
+          ],
+          "probes": [
+            {
+              "name": "tcpProbe",
+              "properties": {
+                "protocol": "Tcp",
+                "port": 443,
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2
+              }
+            },
+            {
+              "name": "tcpProbe01",
+              "properties": {
+                "protocol": "Tcp",
+                "port": 3391,
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2
+              }
+            }
+          ],
+          "inboundNatRules": [
+            {
+              "name": "rdp",
+              "properties": {
+                "frontendIPConfiguration": {
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers',parameters('loadBalancer')),'/frontendIPConfigurations/LBFE')]"
+                },
+                "protocol": "tcp",
+                "frontendPort": 3389,
+                "backendPort": 3389,
+                "enableFloatingIP": false
+              }
+            }
+          ]
+        }
+      },
         {
             "apiVersion": "2015-06-15",
             "type": "Microsoft.Network/networkInterfaces",
@@ -315,9 +336,9 @@
                         "name": "ipconfig",
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
-                            "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('gatewayIpRef'))]"
-                            },
+                          "publicIPAddress": {
+                            "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('gatewayIpRef'))]"
+                          },
                             "subnet": {
                                 "id": "[variables('subnet-id')]"
                             },
@@ -355,9 +376,9 @@
                         "name": "ipconfig",
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
-                            "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('brokerIpRef'))]"
-                            },
+                          "publicIPAddress": {
+                            "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('brokerIpRef'))]"
+                          },
                             "subnet": {
                                 "id": "[variables('subnet-id')]"
                             }
@@ -418,11 +439,11 @@
                 "availabilitySet": {
                     "id": "[resourceId('Microsoft.Compute/availabilitySets', 'AsTRdgwh01')]"
                 },
-                "osProfile": {
-                    "computerName": "gateway",
-                    "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "[parameters('adminPassword')]"
-                },
+              "osProfile": {
+                "computerName": "VmWTRdgwh1",
+                "adminUsername": "[parameters('adminUsername')]",
+                "adminPassword": "[parameters('adminPassword')]"
+              },
                 "storageProfile": {
                     "imageReference": {
                         "publisher": "[variables('imagePublisher')]",
@@ -448,37 +469,37 @@
                 }
             },
             "resources": [
-                {
-                    "apiVersion": "2015-06-15",
-                    "type": "Microsoft.Compute/virtualMachines/extensions",
-                    "name": "VmWTRdgwh1/gateway",
-                    "location": "[parameters('location')]",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Compute/virtualMachines', 'VmWTRdgwh1')]"
-                    ],
-                    "properties": {
-                        "publisher": "Microsoft.Powershell",
-                        "type": "DSC",
-                        "typeHandlerVersion": "2.11",
-                        "autoUpgradeMinorVersion": true,
-                        "settings": {
-                            "ModulesUrl": "[concat(variables('assetLocation'),'/Configuration.zip')]",
-                            "ConfigurationFunction": "Configuration.ps1\\Gateway",
-                            "Properties": {
-                                "DomainName": "[parameters('adDomainName')]",
-                                "AdminCreds": {
-                                    "UserName": "[parameters('adminUsername')]",
-                                    "Password": "PrivateSettingsRef:AdminPassword"
-                                }
-                            }
-                        },
-                        "protectedSettings": {
-                            "Items": {
-                                "AdminPassword": "[parameters('adminPassword')]"
-                            }
-                        }
+              {
+                "apiVersion": "2015-06-15",
+                "type": "Microsoft.Compute/virtualMachines/extensions",
+                "name": "VmWTRdgwh1/gateway",
+                "location": "[parameters('location')]",
+                "dependsOn": [
+                  "[resourceId('Microsoft.Compute/virtualMachines', 'VmWTRdgwh1')]"
+                ],
+                "properties": {
+                  "publisher": "Microsoft.Powershell",
+                  "type": "DSC",
+                  "typeHandlerVersion": "2.11",
+                  "autoUpgradeMinorVersion": true,
+                  "settings": {
+                    "ModulesUrl": "[concat(variables('assetLocation'),'/Configuration.zip')]",
+                    "ConfigurationFunction": "Configuration.ps1\\Gateway",
+                    "Properties": {
+                      "DomainName": "[parameters('adDomainName')]",
+                      "AdminCreds": {
+                        "UserName": "[parameters('adminUsername')]",
+                        "Password": "PrivateSettingsRef:AdminPassword"
+                      }
                     }
+                  },
+                  "protectedSettings": {
+                    "Items": {
+                      "AdminPassword": "[parameters('adminPassword')]"
+                    }
+                  }
                 }
+              }
             ]
         },
         {
@@ -531,37 +552,37 @@
                 }
             },
             "resources": [
-                {
-                    "apiVersion": "2015-06-15",
-                    "type": "Microsoft.Compute/virtualMachines/extensions",
-                    "name": "[concat('VmWTRdsh', copyindex(),'/sessionhost')]",
-                    "location": "[parameters('location')]",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Compute/virtualMachines', concat('VmWTRdsh', copyindex()))]"
-                    ],
-                    "properties": {
-                        "publisher": "Microsoft.Powershell",
-                        "type": "DSC",
-                        "typeHandlerVersion": "2.11",
-                        "autoUpgradeMinorVersion": true,
-                        "settings": {
-                            "ModulesUrl": "[concat(variables('assetLocation'),'/Configuration.zip')]",
-                            "ConfigurationFunction": "Configuration.ps1\\SessionHost",
-                            "Properties": {
-                                "DomainName": "[parameters('adDomainName')]",
-                                "AdminCreds": {
-                                    "UserName": "[parameters('adminUsername')]",
-                                    "Password": "PrivateSettingsRef:AdminPassword"
-                                }
-                            }
-                        },
-                        "protectedSettings": {
-                            "Items": {
-                                "AdminPassword": "[parameters('adminPassword')]"
-                            }
-                        }
+              {
+                "apiVersion": "2015-06-15",
+                "type": "Microsoft.Compute/virtualMachines/extensions",
+                "name": "[concat('VmWTRdsh', copyindex(),'/sessionhost')]",
+                "location": "[parameters('location')]",
+                "dependsOn": [
+                  "[resourceId('Microsoft.Compute/virtualMachines', concat('VmWTRdsh', copyindex()))]"
+                ],
+                "properties": {
+                  "publisher": "Microsoft.Powershell",
+                  "type": "DSC",
+                  "typeHandlerVersion": "2.11",
+                  "autoUpgradeMinorVersion": true,
+                  "settings": {
+                    "ModulesUrl": "[concat(variables('assetLocation'),'/Configuration.zip')]",
+                    "ConfigurationFunction": "Configuration.ps1\\SessionHost",
+                    "Properties": {
+                      "DomainName": "[parameters('adDomainName')]",
+                      "AdminCreds": {
+                        "UserName": "[parameters('adminUsername')]",
+                        "Password": "PrivateSettingsRef:AdminPassword"
+                      }
                     }
+                  },
+                  "protectedSettings": {
+                    "Items": {
+                      "AdminPassword": "[parameters('adminPassword')]"
+                    }
+                  }
                 }
+              }
             ]
         },
         {
@@ -581,11 +602,11 @@
                 "availabilitySet": {
                     "id": "[resourceId('Microsoft.Compute/availabilitySets', 'AsTRdcbh01')]"
                 },
-                "osProfile": {
-                    "computerName": "broker",
-                    "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "[parameters('adminPassword')]"
-                },
+              "osProfile": {
+                "computerName": "VmWTRdcbh01",
+                "adminUsername": "[parameters('adminUsername')]",
+                "adminPassword": "[parameters('adminPassword')]"
+              },
                 "storageProfile": {
                     "imageReference": {
                         "publisher": "[variables('imagePublisher')]",
@@ -629,18 +650,18 @@
                 "settings": {
                     "modulesUrl": "[concat(variables('assetLocation'),'/Configuration.zip')]",
                     "configurationFunction": "Configuration.ps1\\RDSDeployment",
-                    "Properties": {
-                        "adminCreds": {
-                            "UserName": "[parameters('adminUsername')]",
-                            "Password": "PrivateSettingsRef:adminPassword"
-                        },
-                        "connectionBroker": "[concat('broker.',parameters('adDomainName'))]",
-                        "domainName": "[parameters('adDomainName')]",
-                        "externalfqdn": "[reference(variables('gatewayIpRef')).dnsSettings.fqdn]",
-                        "numberOfRdshInstances": "[parameters('numberOfRdshInstances')]",
-                        "sessionHostNamingPrefix": "VmWTRdsh",
-                        "webAccessServer": "[concat('gateway.',parameters('adDomainName'))]"
-                    }
+                  "Properties": {
+                    "adminCreds": {
+                      "UserName": "[parameters('adminUsername')]",
+                      "Password": "PrivateSettingsRef:adminPassword"
+                    },
+                    "connectionBroker": "[concat('VmWTRdcbh01.',parameters('adDomainName'))]",
+                    "domainName": "[parameters('adDomainName')]",
+                    "externalfqdn": "[reference(parameters('gatewayIpRef')).dnsSettings.fqdn]",
+                    "numberOfRdshInstances": "[parameters('numberOfRdshInstances')]",
+                    "sessionHostNamingPrefix": "VmWTRdsh",
+                    "webAccessServer": "[concat('VmWPRdgwh.',parameters('adDomainName'))]"
+                  }
                 },
                 "protectedSettings": {
                     "Items": {

@@ -124,6 +124,27 @@
       },
       "defaultValue": "Subnet"
     },
+    "publicIpRef": {
+      "type": "string",
+      "defaultValue": "[parameters('publicIpRef')]",
+      "metadata": {
+        "description": "The backendAddressPools name must match from the RDS deployment. And default value taken by template is LBBAP."
+      }
+    },
+    "brokerIpRef": {
+      "type": "string",
+      "defaultValue": "[parameters('brokerIpRef')]",
+      "metadata": {
+        "description": "The backendAddressPools name must match from the RDS deployment. And default value taken by template is LBBAP."
+      }
+    },
+    "gatewayIpRef": {
+      "type": "string",
+      "defaultValue": "[parameters('gatewayIpRef')]",
+      "metadata": {
+        "description": "The backendAddressPools name must match from the RDS deployment. And default value taken by template is LBBAP."
+      }
+    },
     "adVnetRG": {
       "type": "string",
       "metadata": {
@@ -137,7 +158,7 @@
     "imageOffer": "WindowsServer",
     "dnsServerPrivateIp": "10.40.0.4",
     "subnet-id": "[concat(resourceId(parameters('adVnetRG'),'Microsoft.Network/virtualNetworks',parameters('existingVnet')),'/subnets/',parameters('existingSubnet'))]",
-    "publicIpRef": "PiPEu1Rdsh",
+    //"publicIpRef": "PiPEu1Rdsh",
     "assetLocation": "https://raw.githubusercontent.com/Azure/AzureStack-QuickStart-Templates/master/rds-deployment",
     "apiVersion": "2015-06-15",
     "PublicIPLocation": "[concat(parameters('dnsLabelPrefix'),'.','[resourceGroup().location]','.cloudapp.azure.com')]"
@@ -161,7 +182,7 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[variables('publicIpRef')]",
+      "name": "[parameters('publicIpRef')]",
       "location": "[resourceGroup().location]",
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
@@ -176,7 +197,7 @@
       "name": "[Parameters('Loadbalancer')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat('Microsoft.Network/publicIPAddresses/',variables('publicIpRef'))]"
+        "[concat('Microsoft.Network/publicIPAddresses/',parameters('publicIpRef'))]"
       ],
       "properties": {
         "frontendIPConfigurations": [
@@ -184,7 +205,7 @@
             "name": "LBFE",
             "properties": {
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIpRef'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIpRef'))]"
               }
             }
           }
@@ -359,7 +380,7 @@
           "name": "[concat('VmWPRdgwh',copyindex(),'/Gateway')]",
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "location": "[resourceGroup().location]",
-          "apiVersion": "2015-06-15",
+          "apiVersion": "2017-03-30",
           "dependsOn": [
             "[resourceId('Microsoft.Compute/virtualMachines', Concat('VmWPRdgwh',copyindex()))]"
           ],
@@ -390,7 +411,7 @@
           "name": "[concat('VmWPRdgwh',copyindex(),'/WebAndGwFarmAdd_PostConfig1.1')]",
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "location": "[resourceGroup().location]",
-          "apiVersion": "2015-06-15",
+          "apiVersion": "2017-03-30",
           "dependsOn": [
             "[resourceId('Microsoft.Compute/virtualMachines', Concat('VmWPRdgwh',copyindex()))]",
             "[concat('Microsoft.Compute/virtualMachines/VmWPRdgwh',copyindex(),'/extensions/','Gateway')]"

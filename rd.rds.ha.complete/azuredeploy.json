@@ -13,7 +13,7 @@
       "metadata": {
         "description": "The name of the AD domain. For example contoso.com"
       },
-      "defaultValue": "contoso.com"
+      "defaultValue": "adm.scalesquad.io"
     },
     "adVnetName": {
       "type": "string",
@@ -41,7 +41,7 @@
       "metadata": {
         "description": "The name of the administrator of the new VM and the domain. Exclusion list: 'administrator'. For example johnadmin"
       },
-      "defaultValue": "vmadmin"
+      "defaultValue": "nitadmin"
     },
     "adminPassword": {
       "type": "securestring",
@@ -63,7 +63,7 @@
     },
     "numberOfRdshInstances": {
       "type": "int",
-      "defaultValue": 1,
+      "defaultValue": 2,
       "metadata": {
         "description": "Number of RemoteDesktopSessionHosts"
       }
@@ -71,7 +71,7 @@
     "rdshVmSize": {
       "type": "string",
       "allowedValues": [
-        "Standard_A1_v2",
+        "Standard_A2",
         "Standard_A2_v2",
         "Standard_A2m_v2",
         "Standard_A4_v2",
@@ -87,13 +87,34 @@
       "metadata": {
         "description": "The size of the RDSH VMs"
       },
-      "defaultValue": "Standard_A4_v2"
+      "defaultValue": "Standard_A2"
     },
     "location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]",
       "metadata": {
         "description": "Location for all resources."
+      }
+    },
+    "publicIpRef": {
+      "type": "string",
+      "defaultValue": "[parameters('publicIpRef')]",
+      "metadata": {
+        "description": "The backendAddressPools name must match from the RDS deployment. And default value taken by template is LBBAP."
+      }
+    },
+    "brokerIpRef": {
+      "type": "string",
+      "defaultValue": "[parameters('brokerIpRef')]",
+      "metadata": {
+        "description": "The backendAddressPools name must match from the RDS deployment. And default value taken by template is LBBAP."
+      }
+    },
+    "gatewayIpRef": {
+      "type": "string",
+      "defaultValue": "[parameters('gatewayIpRef')]",
+      "metadata": {
+        "description": "The backendAddressPools name must match from the RDS deployment. And default value taken by template is LBBAP."
       }
     },
     "loadBalancer": {
@@ -131,13 +152,13 @@
     }
   },
   "variables": {
-    "rds-without-existingAD-uri": "https://github.com/elamathiJv/Azure-Deployment-Templates/raw/master/rg.rds/rg.rds.ha.existing-ad/azuredeploy.json",
-    "rds-ha-gateway-uri": "https://raw.githubusercontent.com/elamathiJv/Azure-Deployment-Templates/master/rg.rds/rg.rds.ha.gateway/azuredeploy.json",
-    "rds-ha-broker-uri": "https://raw.githubusercontent.com/elamathiJv/Azure-Deployment-Templates/master/rg.rds/rg.rds.ha.broker/azuredeploy.json",
-    "rds-ha-gateway-availablilitySet-name": "gw-availabilityset",
-    "rds-ha-gateway-fqdn-internal-name": "concat('gateway.',parameters(adDomainName))",
-    "rds-ha-gateway-fqdn-external-name": "[concat('gwd', 'rdshademo1','.',parameters('location'),'.cloudapp.azure.com')]",
-    "rds-ha-brokerServer-fqdn-internal-name": "concat('broker.',parameters(adDomainName))"
+    "rds-without-existingAD-uri": "https://raw.githubusercontent.com/itsmine1986/rg.rds/master/rg.rds.ha.existing-ad/azuredeploy.json",
+    "rds-ha-gateway-uri": "https://raw.githubusercontent.com/itsmine1986/rg.rds/master/rg.rds.ha.gateway/azuredeploy.json",
+    "rds-ha-broker-uri": "https://raw.githubusercontent.com/itsmine1986/rg.rds/master/rg.rds.ha.broker/azuredeploy.json",
+    "rds-ha-gateway-availablilitySet-name": "AsTRdgwh01",
+    "rds-ha-gateway-fqdn-internal-name": "concat('VmWPRdgwh.',parameters(adDomainName))",
+    "rds-ha-gateway-fqdn-external-name": "[concat('gwd','rdshademo1','.',parameters('location'),'.cloudapp.azure.com')]",
+    "rds-ha-brokerServer-fqdn-internal-name": "concat('VmWTRdcbh01.',parameters(adDomainName))"
   },
   "resources": [
     {
@@ -183,6 +204,15 @@
           },
           "location": {
             "value": "[parameters('location')]"
+          },
+          "publicIpRef": {
+            "value": "[parameters('publicIpRef')]"
+          },
+          "brokerIpRef": {
+            "value": "[parameters('brokerIpRef')]"
+          },
+          "gatewayIpRef": {
+            "value": "[parameters('gatewayIpRef')]"
           }
         }
       }
@@ -241,7 +271,7 @@
             "value": "[parameters('imageSKU')]"
           },
           "vmSize": {
-            "value": "Standard_A2"
+            "value": "[parameters('rdshVmSize')]"
           },
           "existingVnet": {
             "value": "[parameters('adVnetName')]"
@@ -251,6 +281,15 @@
           },
           "adVnetRG": {
             "value": "[parameters('adVnetRG')]"
+          },
+          "publicIpRef": {
+            "value": "[parameters('publicIpRef')]"
+          },
+          "brokerIpRef": {
+            "value": "[parameters('brokerIpRef')]"
+          },
+          "gatewayIpRef": {
+            "value": "[parameters('gatewayIpRef')]"
           }
         }
       }
