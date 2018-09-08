@@ -27,19 +27,28 @@
       "value": 2
     },
     "loadBalancer": {
-      "value": "loadBalancer"
+      "value": "LbITRds01"
     },
     "backendAddressPools": {
       "value": "LBBAP"
     },
     "numberOfWebGwInstances": {
-      "value": 1
+      "value": 2
     },
     "domainNetbios": {
       "value": "adm"
     },
     "storageAccountName": {
-      "value": "sardsha123"
+      "value": "SaTRdsh01igacr"
+    },
+    "publicIpRef": {
+      "value": "PiPEu1Rdsh"
+    },
+    "brokerIpRef": {
+      "value": "PiPEu1Rdcbh"
+    },
+    "gatewayIpRef": {
+      "value": "PiPEu1Rdgwh"
     }
   }
 }
