@@ -152,9 +152,9 @@
     }
   },
   "variables": {
-    "rds-without-existingAD-uri": "https://raw.githubusercontent.com/itsmine1986/rg.rds/master/rg.rds.ha.existing-ad/azuredeploy.json",
-    "rds-ha-gateway-uri": "https://raw.githubusercontent.com/itsmine1986/rg.rds/master/rg.rds.ha.gateway/azuredeploy.json",
-    "rds-ha-broker-uri": "https://raw.githubusercontent.com/itsmine1986/rg.rds/master/rg.rds.ha.broker/azuredeploy.json",
+    "rds-without-existingAD-uri": "https://raw.githubusercontent.com/itsmine1986/RDS-HA/master/rg.rds.ha.existing-ad/azuredeploy.json",
+    "rds-ha-gateway-uri": "https://raw.githubusercontent.com/itsmine1986/RDS-HA/master/rg.rds.ha.gateway/azuredeploy.json",
+    "rds-ha-broker-uri": "https://raw.githubusercontent.com/itsmine1986/RDS-HA/master/rg.rds.ha.broker/azuredeploy.json",
     "rds-ha-gateway-availablilitySet-name": "AsTRdgwh01",
     "rds-ha-gateway-fqdn-internal-name": "concat('VmWPRdgwh.',parameters(adDomainName))",
     "rds-ha-gateway-fqdn-external-name": "[concat('gwd','rdshademo1','.',parameters('location'),'.cloudapp.azure.com')]",
