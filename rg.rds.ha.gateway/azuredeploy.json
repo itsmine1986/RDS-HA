@@ -304,7 +304,7 @@
       "name": "[parameters('2nd-gw-nic-name')]",
       "type": "Microsoft.Network/networkInterfaces",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2017-10-01",
+      "apiVersion": "2015-06-15",
       "copy": {
         "name": "gw-nic-loop",
         "count": "[parameters('numberOfWebGwInstances')]"
