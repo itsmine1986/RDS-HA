@@ -322,78 +322,78 @@
           ]
         }
       },
-        {
-            "apiVersion": "2015-06-15",
-            "type": "Microsoft.Network/networkInterfaces",
-            "name": "NcVmWTRdgwh01",
-            "location": "[parameters('location')]",
-          "properties": {
-            "ipConfigurations": [
-              {
-                "name": "ipconfig",
-                "properties": {
-                  "privateIPAllocationMethod": "Dynamic",
-                  "publicIPAddress": {
-                    "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('gatewayIpRef'))]"
-                  },
-                  "subnet": {
-                    "id": "[variables('subnet-id')]"
-                  },
-                  "loadBalancerBackendAddressPools": [
-                    {
-                      "id": "[concat(resourceId('Microsoft.Network/loadBalancers','LbITRds01'),'/backendAddressPools/LBBAP')]"
-                    }
-                  ],
-                  "loadBalancerInboundNatRules": [
-                    {
-                      "id": "[concat(resourceId('Microsoft.Network/loadBalancers','LbITRds01'),'/inboundNatRules/rdp')]"
-                    }
-                  ]
+      {
+        "apiVersion": "2018-02-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "NcVmWTRdgwh01",
+        "location": "[parameters('location')]",
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('gatewayIpRef'))]"
+                },
+                "subnet": {
+                  "id": "[variables('subnet-id')]"
+                },
+                "loadBalancerBackendAddressPools": [
+                  {
+                    "id": "[concat(resourceId('Microsoft.Network/loadBalancers','LbITRds01'),'/backendAddressPools/LBBAP')]"
+                  }
+                ],
+                "loadBalancerInboundNatRules": [
+                  {
+                    "id": "[concat(resourceId('Microsoft.Network/loadBalancers','LbITRds01'),'/inboundNatRules/rdp')]"
+                  }
+                ]
+              }
+            }
+          ],
+          "dnsSettings": {
+            "dnsServers": [
+              "[variables('dnsServerPrivateIp')]"
+            ]
+          },
+          "dependsOn": [
+            "Microsoft.Network/loadBalancers/LbITRds01"
+          ]
+        }
+      },
+      {
+        "apiVersion": "2018-02-01",
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "NcVmWTRdcbh01",
+        "location": "[parameters('location')]",
+        "dependsOn": [
+          "Microsoft.Network/loadBalancers/LbITRds01"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "publicIPAddress": {
+                  "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('brokerIpRef'))]"
+                },
+                "subnet": {
+                  "id": "[variables('subnet-id')]"
                 }
               }
-            ],
-            "dnsSettings": {
-              "dnsServers": [
-                "[variables('dnsServerPrivateIp')]"
-              ]
-            },
-            "dependsOn": [
-              "Microsoft.Network/loadBalancers/LbITRds01"
+            }
+          ],
+          "dnsSettings": {
+            "dnsServers": [
+              "[variables('dnsServerPrivateIp')]"
             ]
           }
-        },
-        {
-            "apiVersion": "2015-06-15",
-            "type": "Microsoft.Network/networkInterfaces",
-            "name": "NcVmWTRdcbh01",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "Microsoft.Network/loadBalancers/LbITRds01"
-            ],
-            "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "ipconfig",
-                        "properties": {
-                            "privateIPAllocationMethod": "Dynamic",
-                          "publicIPAddress": {
-                            "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('brokerIpRef'))]"
-                          },
-                            "subnet": {
-                                "id": "[variables('subnet-id')]"
-                            }
-                        }
-                    }
-                ],
-                "dnsSettings": {
-                    "dnsServers": [
-                        "[variables('dnsServerPrivateIp')]"
-                    ]
-                }
-            }
-        },
+        }
+      },
       {
-        "apiVersion": "2015-06-15",
+        "apiVersion": "2018-02-01",
         "type": "Microsoft.Network/networkInterfaces",
         "name": "[concat('NcVmWTRdsh', copyindex())]",
         "location": "[parameters('location')]",
@@ -463,14 +463,14 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces','NcVmWTRdgwh01')]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces/','NcVmWTRdgwh01')]"
                         }
                     ]
                 }
             },
             "resources": [
               {
-                "apiVersion": "2015-06-15",
+                "apiVersion": "2017-03-30",
                 "type": "Microsoft.Compute/virtualMachines/extensions",
                 "name": "VmWTRdgwh1/gateway",
                 "location": "[parameters('location')]",
@@ -546,14 +546,14 @@
                 "networkProfile": {
                     "networkInterfaces": [
                       {
-                        "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('NcVmWTRdsh', copyindex()))]"
+                        "id": "[resourceId('Microsoft.Network/networkInterfaces/',concat('NcVmWTRdsh', copyindex()))]"
                       }
                     ]
                 }
             },
             "resources": [
               {
-                "apiVersion": "2015-06-15",
+                "apiVersion": "2017-03-30",
                 "type": "Microsoft.Compute/virtualMachines/extensions",
                 "name": "[concat('VmWTRdsh', copyindex(),'/sessionhost')]",
                 "location": "[parameters('location')]",
@@ -626,7 +626,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces','NcVmWTRdcbh01')]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces/','NcVmWTRdcbh01')]"
                         }
                     ]
                 }
