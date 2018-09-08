@@ -130,6 +130,27 @@
       "metadata": {
         "description": "The backendAddressPools name must match from the RDS deployment. And default value taken by template is LBBAP."
       }
+    },
+    "gw-nic-name": {
+      "defaultValue": "gw-nic",
+      "type": "String",
+      "metadata": {
+        "description": "The name of the Network Adapter"
+      }
+    },
+    "cb-nic-name": {
+      "defaultValue": "cb-nic",
+      "type": "String",
+      "metadata": {
+        "description": "The name of the Network Adapter"
+      }
+    },
+    "rds-nic-name": {
+      "defaultValue": "rdsh-nic",
+      "type": "String",
+      "metadata": {
+        "description": "The name of the Network Adapter"
+      }
     }
   },
   "variables": {
@@ -325,7 +346,7 @@
       {
         "apiVersion": "2017-10-01",
         "type": "Microsoft.Network/networkInterfaces",
-        "name": "NcVmWTRdgwh01",
+        "name": "[parameters('gw-nic-name')]",
         "location": "[parameters('location')]",
         "properties": {
           "ipConfigurations": [
@@ -365,7 +386,7 @@
       {
         "apiVersion": "2017-10-01",
         "type": "Microsoft.Network/networkInterfaces",
-        "name": "NcVmWTRdcbh01",
+        "name": "[parameters('cb-nic-name')]",
         "location": "[parameters('location')]",
         "dependsOn": [
           "Microsoft.Network/loadBalancers/LbITRds01"
@@ -395,7 +416,7 @@
       {
         "apiVersion": "2017-10-01",
         "type": "Microsoft.Network/networkInterfaces",
-        "name": "[concat('NcVmWTRdsh', copyindex())]",
+        "name": "[concat(parameters('rds-nic-name'), copyindex())]",
         "location": "[parameters('location')]",
         "copy": {
           "name": "rdsh-nic-loop",
@@ -462,9 +483,9 @@
                 },
                 "networkProfile": {
                     "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces/','NcVmWTRdgwh01')]"
-                        }
+                      {
+                        "id": "[resourceId('Microsoft.Network/networkInterfaces',parameters('Gw-nic-name'))]"
+                      }
                     ]
                 }
             },
@@ -546,7 +567,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                       {
-                        "id": "[resourceId('Microsoft.Network/networkInterfaces/',concat('NcVmWTRdsh', copyindex()))]"
+                        "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('rds-nic-name'), copyindex()))]"
                       }
                     ]
                 }
@@ -625,9 +646,9 @@
                 },
                 "networkProfile": {
                     "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces/','NcVmWTRdcbh01')]"
-                        }
+                      {
+                        "id": "[resourceId('Microsoft.Network/networkInterfaces',parameters('CB-nic-name'))]"
+                      }
                     ]
                 }
             }

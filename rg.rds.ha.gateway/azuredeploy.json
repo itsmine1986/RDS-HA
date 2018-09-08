@@ -151,6 +151,13 @@
         "description": "The Resource Group containing the existing Virtual Network resource"
       },
       "defaultValue": "AD-VNET-RG"
+    },
+    "2nd-gw-nic-name": {
+      "defaultValue": "2nd-gw-nic-name",
+      "type": "String",
+      "metadata": {
+        "description": "The name of the Network Adapter"
+      }
     }
   },
   "variables": {
@@ -294,7 +301,7 @@
       }
     },
     {
-      "name": "NcVmWTRdgwh02",
+      "name": "[parameters('2nd-gw-nic-name')]",
       "type": "Microsoft.Network/networkInterfaces",
       "location": "[resourceGroup().location]",
       "apiVersion": "2017-10-01",
@@ -370,7 +377,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces','NcVmWTRdgwh02')]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',parameters('2nd-gw-nic-name')]"
             }
           ]
         }

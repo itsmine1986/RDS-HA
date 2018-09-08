@@ -149,6 +149,34 @@
       "metadata": {
         "description": "Storage account name of RDS-Deployment"
       }
+    },
+    "gw-nic-name": {
+      "defaultValue": "gw-nic",
+      "type": "String",
+      "metadata": {
+        "description": "The name of the Network Adapter"
+      }
+    },
+    "2nd-gw-nic-name": {
+      "defaultValue": "2nd-gw-nic-name",
+      "type": "String",
+      "metadata": {
+        "description": "The name of the Network Adapter"
+      }
+    },
+    "cb-nic-name": {
+      "defaultValue": "cb-nic",
+      "type": "String",
+      "metadata": {
+        "description": "The name of the Network Adapter"
+      }
+    },
+    "rds-nic-name": {
+      "defaultValue": "rdsh-nic",
+      "type": "String",
+      "metadata": {
+        "description": "The name of the Network Adapter"
+      }
     }
   },
   "variables": {
@@ -213,6 +241,15 @@
           },
           "gatewayIpRef": {
             "value": "[parameters('gatewayIpRef')]"
+          },
+          "cb-nic-name": {
+            "value": "[parameters('cb-nic-name')]"
+          },
+          "gw-nic-name": {
+            "value": "[parameters('gw-nic-name')]"
+          },
+          "rds-nic-name": {
+            "value": "[parameters('rds-nic-name')]"
           }
         }
       }
@@ -291,6 +328,9 @@
           "gatewayIpRef": {
             "value": "[parameters('gatewayIpRef')]"
           }
+        },
+        "2nd-gw-nic-name": {
+          "value": "[parameters('2nd-gw-nic-name')]"
         }
       }
     }
