@@ -484,7 +484,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                       {
-                        "id": "[resourceId('Microsoft.Network/networkInterfaces',parameters('Gw-nic-name'))]"
+                        "id": "[resourceId('Microsoft.Network/networkInterfaces',parameters('gw-nic-name'))]"
                       }
                     ]
                 }
